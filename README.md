@@ -415,39 +415,14 @@ GET http://localhost:5000/exercises/
 
 ```
 
-Add Update and delete routes for exercises
 
-```
-.\backend\routes\exercises.js
+GET http://localhost:5000/exercises/5f2f9cd3dcc4a909c9ca29db/id
 
-.
-.
-router.route('/:id').get((req, res) => {
-  Exercise.findById(req.params.id)
-    .then(exercise => res.json(exercise))
-    .catch(err => res.status(400).json('Error: ' + err));
-});
-
-router.route('/:id').delete((req, res) => {
-  Exercise.findByIdAndDelete(req.params.id)
-    .then(() => res.json('Exercise deleted.'))
-    .catch(err => res.status(400).json('Error: ' + err));
-});
-
-router.route('/update/:id').post((req, res) => {
-  Exercise.findById(req.params.id)
-    .then(exercise => {
-      exercise.username = req.body.username;
-      exercise.description = req.body.description;
-      exercise.duration = Number(req.body.duration);
-      exercise.date = Date.parse(req.body.date);
-
-      exercise.save()
-        .then(() => res.json('Exercise updated!'))
-        .catch(err => res.status(400).json('Error: ' + err));
-    })
-    .catch(err => res.status(400).json('Error: ' + err));
-});
-.
-.
+```sh
+{
+	"username": "bold",
+	"description": "swim",
+	"duration": 40,
+	"date": "2020-08-08T06:22:18.163Z"
+}
 ```
