@@ -497,3 +497,75 @@ added 1 package from 2 contributors and audited 3 packages in 3.038s
 
 found 0 vulnerabilities
 ```
+
+
+Import bootstrap
+
+```js
+/src/App.js
+
+.
+.
+import "bootstrap/dist/css/bootstrap.min.css";
+.
+.
+```
+
+
+Install router react dom
+
+```sh
+
+$ npm install react-router-dom
+npm notice created a lockfile as package-lock.json. You should commit this file.
+npm WARN react-router-dom@5.2.0 requires a peer of react@>=15 but none is installed. You must install peer dependencies yourself.
+npm WARN react-router@5.2.0 requires a peer of react@>=15 but none is installed. You must install peer dependencies yourself.
+npm WARN mini-create-react-context@0.4.0 requires a peer of react@^0.14.0 || ^15.0.0 || ^16.0.0 but none is installed. You must install peer dependencies yourself.
+
++ react-router-dom@5.2.0
+added 18 packages from 11 contributors and audited 18 packages in 7.884s
+found 0 vulnerabilities
+
+```
+
+Add routes in App.js
+
+```js
+/src/App.js
+
+.
+.
+function App() {
+  return (
+    <Router>
+      <div className="container">
+      <Navbar />
+      <br/>
+      <Route path="/" exact component={ExercisesList} />
+      <Route path="/edit/:id" component={EditExercise} />
+      <Route path="/create" component={CreateExercise} />
+      <Route path="/user" component={CreateUser} />
+      </div>
+    </Router>
+  );
+}
+.
+.
+```
+
+Import cpmpnents in App.js
+
+```js
+/src/App.js
+
+.
+.
+import Navbar from "./components/navbar.component"
+import ExercisesList from "./components/exercises-list.component";
+import EditExercise from "./components/edit-exercise.component";
+import CreateExercise from "./components/create-exercise.component";
+import CreateUser from "./components/create-user.component";
+
+.
+.
+```
