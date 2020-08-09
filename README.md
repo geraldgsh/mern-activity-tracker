@@ -565,7 +565,134 @@ import ExercisesList from "./components/exercises-list.component";
 import EditExercise from "./components/edit-exercise.component";
 import CreateExercise from "./components/create-exercise.component";
 import CreateUser from "./components/create-user.component";
+.
+.
+```
 
-.
-.
+Create component folders and files
+
+```
+mern-activity-tracker
+├── README.md
+├── node_modules
+├── package.json
+├── .gitignore
+├── public
+│   ├── favicon.ico
+│   ├── index.html
+│   └── manifest.json
+└── src
+    ├── App.css
+    ├── App.js
+    ├── App.test.js
+    ├── index.css
+    ├── index.js
+    ├── logo.svg
+    ├── serviceWork.js
+    ├── setupTests.js
+    └── components
+        ├── create-exercise.component.js
+        ├── create-user.component.js
+        ├── edit-exercise.component.js
+        ├── exercises-list.component.js
+        └── navbar.component.js
+```
+
+
+Setup navbar component
+
+```js
+/src/components/navbar.component.js 
+
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+
+export default class Navbar extends Component {
+
+  render() {
+    return (
+      <nav className="navbar navbar-dark bg-dark navbar-expand-lg">
+        <Link to="/" className="navbar-brand">ExcerTracker</Link>
+        <div className="collpase navbar-collapse">
+        <ul className="navbar-nav mr-auto">
+          <li className="navbar-item">
+          <Link to="/" className="nav-link">Exercises</Link>
+          </li>
+          <li className="navbar-item">
+          <Link to="/create" className="nav-link">Create Exercise Log</Link>
+          </li>
+          <li className="navbar-item">
+          <Link to="/user" className="nav-link">Create User</Link>
+          </li>
+        </ul>
+        </div>
+      </nav>
+    );
+  }
+}
+```
+
+
+Setup exercise list component
+
+```js
+/src/components/exercises-list.component.js
+
+export default class ExercisesList extends Component {
+    render() {
+    return (
+      <div>
+        <p>You are on the Exercises List component!</p>
+      </div>
+    )
+  }
+}
+```
+
+Setup edit exercise list component
+
+```js
+/src/components/edit-exercise.component.js
+
+export default class EditExercises extends Component {
+    render() {
+    return (
+      <div>
+        <p>You are on the Edit Exercises component!</p>
+      </div>
+    )
+  }
+}
+```
+
+Setup create exercise list component
+
+```js
+/src/components/edit-exercise.component.js
+
+export default class CreateExercises extends Component {
+    render() {
+    return (
+      <div>
+        <p>You are on the Create Exercises component!</p>
+      </div>
+    )
+  }
+}
+```
+
+Setup create user component
+
+```js
+/src/components/edit-exercise.component.js
+
+export default class CreateUsers extends Component {
+    render() {
+    return (
+      <div>
+        <p>You are on the Create Users component!</p>
+      </div>
+    )
+  }
+}
 ```
