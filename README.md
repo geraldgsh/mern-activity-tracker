@@ -703,9 +703,16 @@ Setup create exercise list constructor
 ```js
 /src/components/create-exercise.component.js
 
-export default class EditExercise extends Component {
+export default class CreateExercise extends Component {
   constructor(props) {
-    super(props)
+    super(props);
+
+    this.onChangeUsername = this.onChangeUsername.bind(this);
+    this.onChangeDescription = this.onChangeDescription.bind(this);
+    this.onChangeDuration = this.onChangeDuration.bind(this);
+    this.onChangeDate = this.onChangeDate.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+
     this.state = {
       username: '',
       description: '',
@@ -713,11 +720,6 @@ export default class EditExercise extends Component {
       date: new Date(),
       users: []
     }
-    this.onChangeUsername = this.onChangeUsername.bind(this);
-    this.onChangeDescription = this.onChangeDescription.bind(this);
-    this.onChangeDuration = this.onChangeDuration.bind(this);
-    this.onChangeDate = this.onChangeDate.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
   }
 .
 .
@@ -729,7 +731,7 @@ Setup create exercise list methods
 ```js
 /src/components/create-exercise.component.js
 
-export default class EditExercise extends Component {
+export default class CreateExercise extends Component {
   constructor(props) {
 .
 .
@@ -769,7 +771,7 @@ export default class EditExercise extends Component {
 
     console.log(exercise);
 
-    axios.post('http://localhost:5000/exercises/update/' + this.props.match.params.id, exercise)
+    axios.post('http://localhost:5000/exercises/add', exercise)
       .then(res => console.log(res.data));
 
     window.location = '/';
@@ -788,24 +790,12 @@ export default class EditExercise extends Component {
 .
 .
   componentDidMount() {
-    axios.get('http://localhost:5000/exercises/'+this.props.match.params.id)
-      .then(response => {
-        this.setState({
-          username: response.data.username,
-          description: response.data.description,
-          duration: response.data.duration,
-          date: new Date(response.data.date)
-        })   
-      })
-      .catch(function (error) {
-        console.log(error);
-      })
-
     axios.get('http://localhost:5000/users/')
       .then(response => {
         if (response.data.length > 0) {
           this.setState({
             users: response.data.map(user => user.username),
+            username: response.data[0].username
           })
         }
       })
@@ -851,13 +841,13 @@ Setup create exercise list HTML
 /src/components/create-exercise.component.js
 
 
-export default class EditExercise extends Component {
+export default class CreateExercise extends Component {
 .
 .
   render() {
     return (
     <div>
-      <h3>Edit Exercise Log</h3>
+      <h3>Create New Exercise Log</h3>
       <form onSubmit={this.onSubmit}>
         <div className="form-group"> 
           <label>Username: </label>
@@ -905,7 +895,7 @@ export default class EditExercise extends Component {
         </div>
 
         <div className="form-group">
-          <input type="submit" value="Edit Exercise Log" className="btn btn-primary" />
+          <input type="submit" value="Create Exercise Log" className="btn btn-primary" />
         </div>
       </form>
     </div>
@@ -980,7 +970,6 @@ Setup create users layout
 
 ```js
 /src/components/create-user.component.js
-/src/components/create-user.component.js
 
 .
 .
@@ -1011,4 +1000,329 @@ export default class CreateUser extends Component {
 }
 .
 .
+```
+
+
+Install Axios
+
+```
+$ npm install axios
+
++ axios@0.19.2
+added 4 packages from 7 contributors and audited 41 packages in 5.013s
+
+15 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+```
+
+```js
+/src/components/create-user.component.js
+.
+.
+import axios from 'axios';
+.
+.
+```
+
+
+v
+  constructor(props) {
+    super(props);
+
+    this.deleteExercise = this.deleteExercise.bind(this)
+
+    this.state = {exercises: []};
+  }
+.
+.
+```
+
+
+Setup exercise list lifecycle method
+
+```js
+/src/components/cexercises-list.component.js
+.
+.
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+.
+.
+export default class ExercisesList extends Component {
+.
+.
+  componentDidMount() {
+    axios.get('http://localhost:5000/exercises/')
+      .then(response => {
+        this.setState({ exercises: response.data })
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+  }
+.
+.
+```
+
+
+Setup exercise list method
+
+```js
+/src/components/cexercises-list.component.js
+.
+.
+export default class ExercisesList extends Component {
+.
+.
+  deleteExercise(id) {
+    axios.delete('http://localhost:5000/exercises/'+id)
+      .then(response => { console.log(response.data)});
+
+    this.setState({
+      exercises: this.state.exercises.filter(el => el._id !== id)
+    })
+  }
+
+  exerciseList() {
+    return this.state.exercises.map(currentexercise => {
+      return <Exercise exercise={currentexercise} deleteExercise={this.deleteExercise} key={currentexercise._id}/>;
+    })
+  }
+.
+.
+```
+
+Setup exercise HTML layout
+
+```js
+/src/components/cexercises-list.component.js
+.
+.
+export default class ExercisesList extends Component {
+.
+.
+  render() {
+    return (
+      <div>
+        <h3>Logged Exercises</h3>
+        <table className="table">
+          <thead className="thead-light">
+            <tr>
+              <th>Username</th>
+              <th>Description</th>
+              <th>Duration</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            { this.exerciseList() }
+          </tbody>
+        </table>
+      </div>
+    )
+  }
+}
+```
+
+
+Setup edit exercise constructor
+
+```js
+/src/components/edit-exercise.component.js
+.
+.
+import React, { Component } from 'react';
+import axios from 'axios';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
+
+export default class EditExercise extends Component {
+  constructor(props) {
+    super(props);
+
+    this.onChangeUsername = this.onChangeUsername.bind(this);
+    this.onChangeDescription = this.onChangeDescription.bind(this);
+    this.onChangeDuration = this.onChangeDuration.bind(this);
+    this.onChangeDate = this.onChangeDate.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+
+    this.state = {
+      username: '',
+      description: '',
+      duration: 0,
+      date: new Date(),
+      users: []
+    }
+  }
+.
+.
+```
+
+
+Setup edit exercise lifecycle method
+
+```js
+/src/components/edit-exercise.component.js
+.
+.
+export default class EditExercise extends Component {
+.
+.
+  componentDidMount() {
+    axios.get('http://localhost:5000/exercises/'+this.props.match.params.id)
+      .then(response => {
+        this.setState({
+          username: response.data.username,
+          description: response.data.description,
+          duration: response.data.duration,
+          date: new Date(response.data.date)
+        })   
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+
+    axios.get('http://localhost:5000/users/')
+      .then(response => {
+        if (response.data.length > 0) {
+          this.setState({
+            users: response.data.map(user => user.username),
+          })
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+
+  }
+.
+.
+```
+
+
+Setup edit exercise method
+
+```js
+/src/components/edit-exercise.component.js
+.
+.
+export default class EditExercise extends Component {
+.
+.
+  onChangeUsername(e) {
+    this.setState({
+      username: e.target.value
+    })
+  }
+
+  onChangeDescription(e) {
+    this.setState({
+      description: e.target.value
+    })
+  }
+
+  onChangeDuration(e) {
+    this.setState({
+      duration: e.target.value
+    })
+  }
+
+  onChangeDate(date) {
+    this.setState({
+      date: date
+    })
+  }
+
+  onSubmit(e) {
+    e.preventDefault();
+
+    const exercise = {
+      username: this.state.username,
+      description: this.state.description,
+      duration: this.state.duration,
+      date: this.state.date
+    }
+
+    console.log(exercise);
+
+    axios.post('http://localhost:5000/exercises/update/' + this.props.match.params.id, exercise)
+      .then(res => console.log(res.data));
+
+    window.location = '/';
+  }
+.
+.
+```
+
+
+Setup edit exercise HTML layout
+
+```js
+/src/components/edit-exercise.component.js
+.
+.
+export default class EditExercise extends Component {
+.
+.
+  render() {
+    return (
+    <div>
+      <h3>Edit Exercise Log</h3>
+      <form onSubmit={this.onSubmit}>
+        <div className="form-group"> 
+          <label>Username: </label>
+          <select ref="userInput"
+              required
+              className="form-control"
+              value={this.state.username}
+              onChange={this.onChangeUsername}>
+              {
+                this.state.users.map(function(user) {
+                  return <option 
+                    key={user}
+                    value={user}>{user}
+                    </option>;
+                })
+              }
+          </select>
+        </div>
+        <div className="form-group"> 
+          <label>Description: </label>
+          <input  type="text"
+              required
+              className="form-control"
+              value={this.state.description}
+              onChange={this.onChangeDescription}
+              />
+        </div>
+        <div className="form-group">
+          <label>Duration (in minutes): </label>
+          <input 
+              type="text" 
+              className="form-control"
+              value={this.state.duration}
+              onChange={this.onChangeDuration}
+              />
+        </div>
+        <div className="form-group">
+          <label>Date: </label>
+          <div>
+            <DatePicker
+              selected={this.state.date}
+              onChange={this.onChangeDate}
+            />
+          </div>
+        </div>
+
+        <div className="form-group">
+          <input type="submit" value="Edit Exercise Log" className="btn btn-primary" />
+        </div>
+      </form>
+    </div>
+    )
+  }
+}
 ```
