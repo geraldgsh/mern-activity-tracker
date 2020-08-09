@@ -459,3 +459,41 @@ DELETE http://localhost:5000/exercises/5f2f9cd3dcc4a909c9ca29db/id
 ```sh
 "Exercise deleted!"
 ```
+
+
+Front end
+
+Install bootstrap
+
+```sh
+mern-activity-tracker$ npm install popper.js
+npm WARN deprecated popper.js@1.16.1: You can find the new Popper v2 at @popperjs/core, this package is dedicated to the legacy v1
+npm notice created a lockfile as package-lock.json. You should commit this file.
++ popper.js@1.16.1
+added 1 package from 2 contributors and audited 1 package in 1.291s
+
+1 package is looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+
+mern-activity-tracker$ npm install jquery
++ jquery@3.5.1
+added 1 package from 1 contributor and audited 2 packages in 1.107s
+
+1 package is looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+
+mern-activity-tracker$ npm install bootstrap
++ bootstrap@4.5.2
+added 1 package from 2 contributors and audited 3 packages in 3.038s
+
+2 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+```
