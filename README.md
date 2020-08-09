@@ -426,3 +426,36 @@ GET http://localhost:5000/exercises/5f2f9cd3dcc4a909c9ca29db/id
 	"date": "2020-08-08T06:22:18.163Z"
 }
 ```
+
+POST http://localhost:5000/exercises/update/5f2f9cd3dcc4a909c9ca29db/id
+
+```sh
+{
+    "username": "bold",
+    "description": "walk",
+    "duration": 93,
+    "date": "2020-08-08T06:22:18.163Z"
+}
+```
+
+```sh
+"Exercise updated!"
+```
+
+
+GET http://localhost:5000/exercises/5f2f9cd3dcc4a909c9ca29db/id
+
+```sh
+{
+	"username": "bold",
+	"description": "swim",
+	"duration": 93,
+	"date": "2020-08-08T06:22:18.163Z"
+}
+```
+
+DELETE http://localhost:5000/exercises/5f2f9cd3dcc4a909c9ca29db/id
+
+```sh
+"Exercise deleted!"
+```
