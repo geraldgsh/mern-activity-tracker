@@ -696,3 +696,319 @@ export default class CreateUsers extends Component {
   }
 }
 ```
+
+
+Setup create exercise list constructor
+
+```js
+/src/components/create-exercise.component.js
+
+export default class EditExercise extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      username: '',
+      description: '',
+      duration: 0,
+      date: new Date(),
+      users: []
+    }
+    this.onChangeUsername = this.onChangeUsername.bind(this);
+    this.onChangeDescription = this.onChangeDescription.bind(this);
+    this.onChangeDuration = this.onChangeDuration.bind(this);
+    this.onChangeDate = this.onChangeDate.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+  }
+.
+.
+```
+
+
+Setup create exercise list methods
+
+```js
+/src/components/create-exercise.component.js
+
+export default class EditExercise extends Component {
+  constructor(props) {
+.
+.
+  onChangeUsername(e) {
+    this.setState({
+      username: e.target.value
+    })
+  }
+
+  onChangeDescription(e) {
+    this.setState({
+      description: e.target.value
+    })
+  }
+
+  onChangeDuration(e) {
+    this.setState({
+      duration: e.target.value
+    })
+  }
+
+  onChangeDate(date) {
+    this.setState({
+      date: date
+    })
+  }
+
+  onSubmit(e) {
+    e.preventDefault();
+
+    const exercise = {
+      username: this.state.username,
+      description: this.state.description,
+      duration: this.state.duration,
+      date: this.state.date
+    }
+
+    console.log(exercise);
+
+    axios.post('http://localhost:5000/exercises/update/' + this.props.match.params.id, exercise)
+      .then(res => console.log(res.data));
+
+    window.location = '/';
+  }
+.
+.
+```
+
+
+Setup create exercise list lifecycle methods
+
+```js
+/src/components/create-exercise.component.js
+
+export default class EditExercise extends Component {
+.
+.
+  componentDidMount() {
+    axios.get('http://localhost:5000/exercises/'+this.props.match.params.id)
+      .then(response => {
+        this.setState({
+          username: response.data.username,
+          description: response.data.description,
+          duration: response.data.duration,
+          date: new Date(response.data.date)
+        })   
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+
+    axios.get('http://localhost:5000/users/')
+      .then(response => {
+        if (response.data.length > 0) {
+          this.setState({
+            users: response.data.map(user => user.username),
+          })
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+
+  }
+.
+.
+```
+
+
+Install datepicker 
+
+```
+$ npm install react-datepicker
+
++ react-datepicker@3.1.3
+added 36 packages from 28 contributors and audited 37 packages in 12.274s
+
+15 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+```
+
+```js
+/src/components/edit-exercise.component.js
+
+.
+.
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
+.
+.
+```
+
+
+Setup create exercise list HTML
+
+```js
+/src/components/create-exercise.component.js
+
+
+export default class EditExercise extends Component {
+.
+.
+  render() {
+    return (
+    <div>
+      <h3>Edit Exercise Log</h3>
+      <form onSubmit={this.onSubmit}>
+        <div className="form-group"> 
+          <label>Username: </label>
+          <select ref="userInput"
+              required
+              className="form-control"
+              value={this.state.username}
+              onChange={this.onChangeUsername}>
+              {
+                this.state.users.map(function(user) {
+                  return <option 
+                    key={user}
+                    value={user}>{user}
+                    </option>;
+                })
+              }
+          </select>
+        </div>
+        <div className="form-group"> 
+          <label>Description: </label>
+          <input  type="text"
+              required
+              className="form-control"
+              value={this.state.description}
+              onChange={this.onChangeDescription}
+              />
+        </div>
+        <div className="form-group">
+          <label>Duration (in minutes): </label>
+          <input 
+              type="text" 
+              className="form-control"
+              value={this.state.duration}
+              onChange={this.onChangeDuration}
+              />
+        </div>
+        <div className="form-group">
+          <label>Date: </label>
+          <div>
+            <DatePicker
+              selected={this.state.date}
+              onChange={this.onChangeDate}
+            />
+          </div>
+        </div>
+
+        <div className="form-group">
+          <input type="submit" value="Edit Exercise Log" className="btn btn-primary" />
+        </div>
+      </form>
+    </div>
+    )
+  }
+}
+```
+
+
+
+Setup create users constructor
+
+```js
+/src/components/create-user.component.js
+
+.
+.
+export default class CreateUser extends Component {
+  constructor(props) {
+    super(props);
+
+    this.onChangeUsername = this.onChangeUsername.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+
+    this.state = {
+      username: ''
+    }
+  }
+.
+.
+```
+
+
+Setup create users methods
+
+```js
+/src/components/create-user.component.js
+
+.
+.
+export default class CreateUser extends Component {
+.
+.
+  onChangeUsername(e) {
+    this.setState({
+      username: e.target.value
+    })
+  }
+
+  onSubmit(e) {
+    e.preventDefault();
+
+    const user = {
+      username: this.state.username
+    }
+
+    console.log(user);
+
+    axios.post('http://localhost:5000/users/add', user)
+      .then(res => console.log(res.data));
+
+    this.setState({
+      username: ''
+    })
+  }
+.
+.
+```
+
+
+Setup create users layout
+
+```js
+/src/components/create-user.component.js
+/src/components/create-user.component.js
+
+.
+.
+export default class CreateUser extends Component {
+.
+.
+  render() {
+    return (
+      <div>
+        <h3>Create New User</h3>
+        <form onSubmit={this.onSubmit}>
+          <div className="form-group"> 
+            <label>Username: </label>
+            <input  type="text"
+                required
+                className="form-control"
+                value={this.state.username}
+                onChange={this.onChangeUsername}
+                />
+          </div>
+          <div className="form-group">
+            <input type="submit" value="Create User" className="btn btn-primary" />
+          </div>
+        </form>
+      </div>
+    )
+  }
+}
+.
+.
+```
